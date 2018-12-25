@@ -1,0 +1,26 @@
+{
+  "name": "mentor_link",
+  "version": "1.0.0",
+  "description": "Platform for linking internship seekers with companies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MehdiMitiche/Mentor_Link.git"
+  },
+  "author": "Mehdi Mitiche",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MehdiMitiche/Mentor_Link/issues"
+  },
+  "homepage": "https://github.com/MehdiMitiche/Mentor_Link#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "mongoose": "^5.4.0"
+  }
+}
