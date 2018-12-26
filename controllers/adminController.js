@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const AdminSchema = require('../models/Admin')
 
 
+const Admin = require('../models/Admin')
 
 //CRUD OPERATIONS
 const getAdmin = () => {

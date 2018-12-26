@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const UserSchema = require('../models/User')
 const jwt = require('jsonwebtoken')
 
+const User = require('../models/User')
 
 
 //CRUD OPERATIONS
