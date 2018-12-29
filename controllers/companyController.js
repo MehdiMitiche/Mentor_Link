@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const CompanySchema = require('../models/Company')
+const companySchema = require('../models/Company')
 
-const Company = require('../models/Company')
+const Company = mongoose.model('Companie', companySchema )
 
 //CRUD OPERATIONS
 const getCompany = () => {
