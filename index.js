@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const expressValidator = require('express-validator')
+const session = require('express-session')
+const passport = require('passport')
 
 const app = express()
 
@@ -11,6 +13,7 @@ const userRouter = require('./routes/userRoutes')
 const adminRouter = require('./routes/adminRoutes')
 const companyRouter = require('./routes/companyRoutes')
 const authRouter = require('./routes/authRoutes')
+
 
 //the Path to the database
 mongoose.connect('mongodb://localhost/Mentor')
@@ -27,6 +30,19 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
+//Using Express-session middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+}))
+
+
+require('./config/passport')(passport);
+//Passport Middelware
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 //Express Validator
@@ -42,14 +58,12 @@ const verifyToken = (req, res, next) => {
         const bearer = bearerHeader.split(' ')
         const access_token = bearer[1]
         //req.token = access_token
-        console.log('hey')
-        console.log(bearerHeader)
-        jwt.verify(access_token , 'SecretKeyHere' ,(err , decoded) => {
-            if(err){
+        jwt.verify(access_token, 'SecretKeyHere', (err, decoded) => {
+            if (err) {
                 res.json({
                     err
                 })
-            }else{
+            } else {
                 req.userData = decoded
                 next()
             }
@@ -67,7 +81,7 @@ app.get('/', (req, res) => {
 //authentification Needed
 app.get('/post', verifyToken, (req, res) => {
     res.send({
-        userData : req.userData
+        userData: req.userData
     })
 
 })

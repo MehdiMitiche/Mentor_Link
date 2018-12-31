@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
-const userSchema = require('../models/User')
+const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-
-const User = mongoose.model('User', userSchema)
-
+const passport = require('passport')
 
 //CRUD OPERATIONS
 const getUser = (req, res) => {
@@ -39,7 +37,7 @@ const updateUser = (req, res) => {
             fieldOfStudy: req.body.fieldOfStudy,
             phoneNumber: req.body.phoneNumber,
         }
-        const query = {_id :req.params.id}
+        const query = { _id: req.params.id }
         User.update(query, userData, (err, user) => {
             if (err) {
                 res.json(err)
@@ -100,29 +98,39 @@ const register = (req, res) => {
         })
     }
 }
-const login = (req, res) => {
-    //Username and password in the req.body
-    //...
-    //Confirming the user from the database with passport JS
-    const user = {
-        id: 2,
-        username: 'Mehdi_',
-        password: 'root',
-        user: true
-    }
-
-    //Creating the Token
-    jwt.sign(user, 'SecretKeyHere', {
-        expiresIn: '1h'
-    }, (err, token) => {
-        if (err) {
+const login = (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) { return next(err) }
+        if (!user) {
             res.json({
-                err: err
+                msg: 'user Not Find'
             })
-        } else {
-            res.json(token)
         }
-    })
+        req.logIn(user, function(err) {
+            if (err) { return next(err); }
+
+            const userData = {
+                id: user._id,
+                username: user.username,
+                password: user.password,
+                user: true
+            }
+
+            //Creating the Token
+            jwt.sign(userData, 'SecretKeyHere', {
+                expiresIn: '1h'
+            }, (err, token) => {
+                if (err) {
+                    console.log('no Err')
+                    res.json({
+                        err: err
+                    })
+                } else {
+                    res.json(token)
+                }
+            })
+        });
+    })(req, res, next)
 }
 
 module.exports = {
